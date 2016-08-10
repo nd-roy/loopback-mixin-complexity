@@ -12,6 +12,29 @@ Install
   npm install --save loopback-mixin-complexity
 ```
 
+Model configuration
+-------------------
+
+Add the `mixins` property to your `server/model-config.json`:
+
+```json
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ],
+    "mixins": [
+      "loopback/common/mixins",
+      "../node_modules/loopback-mixin-complexity",
+      "../common/mixins"
+    ]
+  }
+}
+```
+
 Configure
 ----------
 
