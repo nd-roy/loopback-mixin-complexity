@@ -17,7 +17,7 @@ Configure
 
 To use with your Models add the `mixins` attribute to the definition object of your model config.
 
-```json
+```js
     "Complexity": {
       "fields" : {
         "password" : {   
