@@ -10,12 +10,12 @@ function formatError(field: string) : string {
   return `Field ${field}: Invalid format.`;
 }
 
-function validatePassword(options: {}, plain: string) : Boolean {
+function validatePassword(options: {}, plain: string) : boolean {
   if (typeof plain === 'string' && check(plain, options)) {
     return true;
   }
 
-  const error = new Error(formatError('password'));
+  const error : any = new Error(formatError('password'));
   error.statusCode = 422;
 
   throw error;
