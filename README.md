@@ -1,5 +1,7 @@
 Complexity
 ==========
+[![dependencies Status](https://david-dm.org/AbdoulNdiaye/loopback-mixin-complexity/status.svg)](https://david-dm.org/AbdoulNdiaye/loopback-mixin-complexity)
+[![devDependencies Status](https://david-dm.org/AbdoulNdiaye/loopback-mixin-complexity/dev-status.svg)](https://david-dm.org/AbdoulNdiaye/loopback-mixin-complexity?type=dev)
 
 This module is designed for the [Strongloop Loopback](https://github.com/strongloop/loopback) framework.
 It allows of any Model to validate the complexity of a field. 
