@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "name": "chat",
+      "script": "src/app.js",
+      "watch": true,
+      "exec_interpreter": "babel-node",
+      "exec_mode": "fork",
+      "max_memory_restart": "500M",
+      "ignore-watch": [
+        "[\\/\\\\]\\./",
+        "node_modules",
+        "logs"
+      ],
+      "env": {
+        "NODE_ENV": "local"
+      }
+    }
+  ]
+}

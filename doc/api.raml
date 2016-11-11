@@ -1,0 +1,210 @@
+#%RAML 0.8
+
+title: Karma DATA API
+version: 1.0.0
+protocols: [ HTTP, HTTPS ]
+baseUri: https://{apiDomain}
+
+baseUriParameters:
+  apiDomain:
+    description: The version of the API
+    enum: ["localhost:3001", "52.208.24.242:3001"]
+
+mediaType: application/json
+
+schemas:
+  - default: !include schemas/default.json
+  - error: !include schemas/error.json
+  - oauth_token: !include schemas/oauth/token.json
+  - oauth_error: !include schemas/oauth/error.json
+
+securitySchemes:
+
+/:
+  get:
+    description: Default endpoint.
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/default.json
+            schema: default
+
+/patient:
+  description: Patient Management.
+  /register:
+    post:
+      description: Register a patient
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            email:
+              type: string
+              displayName: Email.
+              required: true
+              example: test@test.com
+            password:
+              type: string
+              displayName: Password.
+              required: true
+              example: qwerty
+            lastName:
+              type: string
+              displayName: Last name.
+              required: true
+              example: Test
+            firstName:
+              type: string
+              description:  First name.
+              required: true
+              example: Test
+      responses:
+        201:
+          description: The user is created.
+        400:
+          description: A required field is missing.
+          body:
+            application/json:
+              schema: error
+        406:
+          description: The user validation has failed.
+          body:
+            application/json:
+              schema: error
+              example: !include examples/user/register/406.json
+        409:
+          description: The user is duplicated.
+          body:
+            application/json:
+              schema: error
+
+/doctor:
+  description: Doctor Management.
+  /register:
+    post:
+      description: Register a doctor
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            email:
+              type: string
+              displayName: Email of the user.
+              required: true
+              example: test@test.com
+            password:
+              type: string
+              displayName: Password of the user.
+              required: true
+              example: mypassword
+            lastName:
+              type: string
+              displayName: Last name of the user.
+              required: true
+              example: Test
+            firstName:
+              type: string
+              description:  First name of the user.
+              required: true
+              example: Test
+      responses:
+        201:
+          description: The user is created.
+        400:
+          description: A required field is missing.
+          body:
+            application/json:
+              schema: error
+        401:
+          description: No admin token.
+          body:
+            application/json:
+              schema: error
+        406:
+          description: The user validation has failed.
+          body:
+            application/json:
+              schema: error
+              example: !include examples/user/register/406.json
+        409:
+          description: The user is duplicated.
+          body:
+            application/json:
+              schema: error
+
+/oauth:
+  description: Oauth payment.
+  /token:
+    description: Fetch an access token.
+    post:
+      body:
+        application/x-www-form-urlencoded:
+          formParameters:
+            username:
+              type: string
+              displayName: Email of the user.
+              required: true
+              example: test@test.com
+            password:
+              type: string
+              displayName: Password of the user.
+              required: true
+              example: mypassword
+            grant_type:
+              type: string
+              required: true
+              example: password
+            scope:
+              type: string
+              enum: [patient, doctor, admin]
+              required: true
+
+      responses:
+        200:
+          description: User has his bearer token.
+          body:
+            application/json:
+              schema: oauth_token
+        400:
+          description: A required field is missing.
+        403:
+          description: Invalid username or password.
+          body:
+            application/json:
+              example: !include examples/oauth/error.json
+              schema: oauth_error
+  /facebook:
+    description: Facebook connect
+    get:
+      description: Payment.
+      responses:
+        302:
+          description: Redirection to facebook callback.
+    /callback:
+      get:
+        description: Facebook callback
+        responses:
+          200:
+            description: Medical record edited.
+            body:
+              application/json:
+                schema: oauth_token
+
+/exception:
+  description: Exception endpoints. We tried to keep the same structure for all our HTTP errors.
+  /404:
+    description: Example of 404 error.
+    get:
+      responses:
+        404:
+          body:
+            application/json:
+              schema: error
+
+  /error:
+    get:
+      description: Example of 500 error.
+      responses:
+        500:
+          body:
+            application/json:
+              schema: error

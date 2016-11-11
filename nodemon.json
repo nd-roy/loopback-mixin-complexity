@@ -1,0 +1,16 @@
+{
+  "verbose": true,
+  "ignore": [
+    ".git",
+    "node_modules/**/node_modules",
+    "test",
+    "dist",
+    "log"
+  ],
+  "env": {
+    "NODE_ENV": "local"
+  },
+  "execMap": {
+    "js": "node_modules/.bin/babel-node src/app.js"
+  }
+}

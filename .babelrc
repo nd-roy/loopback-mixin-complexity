@@ -1,0 +1,13 @@
+
+{
+  "presets": ["flow", "es2015"],
+  "plugins": [
+    "transform-class-properties",
+    "add-module-exports",
+    "transform-promise-to-bluebird",
+    "transform-export-extensions",
+    ["babel-plugin-transform-builtin-extend", {
+      "globals": ["Error", "Array"]
+    }]
+  ]
+}

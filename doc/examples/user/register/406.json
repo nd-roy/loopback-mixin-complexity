@@ -1,0 +1,10 @@
+{
+  "status": 406,
+  "message": "User validation failed",
+  "context": [
+    {
+      "field": "email",
+      "description": "testtest.com is not a valid email."
+    }
+  ]
+}
