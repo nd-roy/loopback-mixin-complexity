@@ -1,36 +1,7 @@
 {
-  "local": {
-    "application": {
-      "scheme": "http",
-      "domain": "localhost",
-      "port": 7000
-    },
-    "mongodb": {
-      "url": "mongodb://localhost:27017/",
-      "db": "karma",
-      "user": "karma",
-      "password": null
-    },
-    "redis": {
-      "host": "localhost",
-      "port": 6379,
-      "ttl_cache": 120
-    },
-    "oauth": {
-      "token_life": 172800
-    },
-    "db": {
-      "host": "localhost",
-      "username": "root",
-      "password": null,
-      "name": "karma"
-    },
-    "facebook": {
-      "clientID": 201475876919185,
-      "clientSecret": "6a79055d1e9e6ade9cf2a0e0fc42448a"
-    },
-    "stripe": {
-      "key": "sk_test_Q6ynl0mDGYmbzPn6GCFDbk1X"
-    }
+  "http": {
+    "scheme": "http",
+    "domain": "localhost",
+    "port": 9000
   }
 }

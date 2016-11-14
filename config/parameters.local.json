@@ -1,0 +1,11 @@
+{
+  "db": {
+    "host": "localhost",
+    "username": "root",
+    "password": null,
+    "name": "karma"
+  },
+  "stripe": {
+    "key": "sk_test_Q6ynl0mDGYmbzPn6GCFDbk1X"
+  }
+}

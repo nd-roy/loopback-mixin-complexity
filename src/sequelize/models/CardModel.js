@@ -6,7 +6,7 @@ import Customer from './CustomerModel';
  * @param sequelize
  * @param DataTypes
  */
-export default function (sequelize, DataTypes) {
+export default function (sequelize: any, DataTypes: any) {
   const Card = sequelize.define('Card', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     stripeId: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -17,7 +17,6 @@ export default function (sequelize, DataTypes) {
     addressState: { type: DataTypes.STRING },
     addressZip: { type: DataTypes.STRING, allowNull: false },
     brand: { type: DataTypes.STRING, allowNull: false },
-    country: { type: DataTypes.STRING, allowNull: false },
     cardHash: { type: DataTypes.STRING, allowNull: false },
     cvc: { type: DataTypes.VIRTUAL },
     number: { type: DataTypes.VIRTUAL },
@@ -29,8 +28,7 @@ export default function (sequelize, DataTypes) {
     underscored: true,
   });
 
-  Card.belongsTo(Customer);
-
+  // Card.belongsTo(Customer);
 
   return Card;
 }

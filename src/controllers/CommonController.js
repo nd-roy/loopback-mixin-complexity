@@ -91,7 +91,7 @@ class CommonController {
           return next(error);
         }
 
-        req.object.setPatient(user);
+        req.qare.model.setPatient(user);
 
         return next();
       }).catch(function catchError(err: Error): Function {
@@ -120,7 +120,7 @@ class CommonController {
           return next(error);
         }
 
-        req.object.setDoctor(user);
+        req.qare.model.setDoctor(user);
 
         return next();
       }).catch(function catchError(err: Error): Function {
@@ -136,7 +136,7 @@ class CommonController {
    * @param next
    */
   static save(req: $Request, res: $Response, next: NextFunction): Function {
-    if (!req.object) {
+    if (!req.qare.model) {
       const error = new HttpError;
       error.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
       error.message = 'The saved object is undefined.';
@@ -144,12 +144,11 @@ class CommonController {
     }
 
     return req
-      .object
+      .qare
+      .model
       .save()
-      .then(() => {
-        return next();
-      })
-      .catch((err: Error) : Function => {
+      .then(() => next())
+      .catch((err: Error): Function => {
         const error = new HttpError;
 
         error.message = err.message;
@@ -180,14 +179,14 @@ class CommonController {
    * @returns {*}
    */
   static render(req: $Request, res: $Response, next: NextFunction): Function {
-    if (!req.object) {
+    if (!req.qare.model) {
       const error = new HttpError;
       error.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
       error.message = 'The saved object is undefined.';
       return next(error);
     }
 
-    return res.json(req.object);
+    return res.json(req.qare.model);
   }
 }
 

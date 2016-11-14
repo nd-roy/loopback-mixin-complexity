@@ -13,7 +13,7 @@ export default class CustomerRepository {
       .findOne({
         where: {
           email,
-        }
+        },
       })
       .then((customerFromDb: db.Customer) => {
         if (!customerFromDb) {
@@ -31,7 +31,7 @@ export default class CustomerRepository {
   static findOneBy(conditions: {}): Function {
     return db.Customer.findOne({
       where: conditions,
-      include: [db.Transaction, db.Subscription, db.Card],
+      include: [db.Card],
     })
       .then((customerFromDb: db.Customer) => {
         if (!customerFromDb) {

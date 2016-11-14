@@ -5,12 +5,10 @@ import redis from 'redis';
 import log4js from 'log4js';
 
 const logger = log4js.getLogger();
-const properties = config.getConfig();
-
 
 class Redis {
-  static getToken = () : any => {
-    const tokenBase = redis.createClient(properties.redis.post, properties.redis.host);
+  static getToken = (): any => {
+    const tokenBase = redis.createClient(config.redis.post, config.redis.host);
 
     tokenBase.on('connect', () => {
       logger.info('Connection to redis `token` established');

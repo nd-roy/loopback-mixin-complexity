@@ -4,7 +4,7 @@ import log4js from 'log4js';
 import fs from 'fs';
 import jsonLayout from 'log4js-json-layout';
 
-const logDirectory = `${__dirname}/../logs`;
+const logDirectory = `${__dirname}/../../logs`;
 
 // Ensure log directory exists
 if (!fs.existsSync(logDirectory)) {
