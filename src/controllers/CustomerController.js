@@ -51,16 +51,40 @@ class CustomerController {
 
   static billingInfo(req: $Request, res: $Response, next: NextFunction): Function {
     const body = req.body;
+    const customer = req.qare.model;
 
     return db
       .Card
-      .build({
-        customer: req.qare.model,
-        email: body.email,
+      .findOrCreate({
+        where: {
+          customer: req.qare.model,
+        },
       })
-      .save();
+      .spread((card, created) => {
+        card.city = body.city;
+        card.country = body.contry;
+        card.addressLine1 = body.addressLine1;
+        card.addressLine2 = body.addressLine2;
+        card.addressState = body.addressState;
+        card.addressZip = body.addressZip;
+        card.brand = body.brand;
+        card.cvc = body.cvc;
+        card.number = body.number;
+        card.expMonth = body.expMonth;
+        card.expYear = body.expYear;
 
-    return next();
+        return card.save();
+      })
+      .then((card) => (
+        Stripe()
+          .createCard(customer, card)
+          .then((result) => {
+            card.stripeId = result.stripeId;
+
+            return card.save();
+          })
+      ))
+      .then(() => next());
   }
 }
 

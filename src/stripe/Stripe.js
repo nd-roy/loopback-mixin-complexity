@@ -35,23 +35,41 @@ class Stripe {
       });
   }
 
+  /**
+   * Create or update a card for a given user.
+   * @param customer
+   * @param card
+   * @returns {Promise.<T>|Promise}
+   */
   createCard(customer: Customer, card: Card) {
-    this.client.subscriptions
-      .create({
-        customer: customer.stripeId,
-        address_city: card.city,
-        address_country: card.country,
-        address_line1: card.addressLine1,
-        address_line2: card.addressLine2,
-        address_state: card.addressState,
-        address_zip: card.addressZip,
-        country: card.country,
-        brand: card.brand,
-        exp_month: card.expMonth,
-        exp_year: card.expYear,
-        number: card.number,
-        object: 'card',
-      })
+    const data = {
+      address_city: card.city,
+      address_country: card.country,
+      address_line1: card.addressLine1,
+      address_line2: card.addressLine2,
+      address_state: card.addressState,
+      address_zip: card.addressZip,
+      country: card.country,
+      brand: card.brand,
+      exp_month: card.expMonth,
+      exp_year: card.expYear,
+      number: card.number,
+      object: 'card',
+    };
+    let promise;
+
+    if (card.stripeId) {
+      promise = this.client.cards
+        .create(
+          customer.stripeId,
+          card.stripeId,
+          data,
+        );
+    } else {
+      promise = this.client.cards
+        .create(customer.stripeId, data);
+    }
+    return promise
       .then((res: any): any => res)
       .catch((err: Error) => {
         throw err;
