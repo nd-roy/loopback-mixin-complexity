@@ -3,25 +3,29 @@
 import { $Response, $Request, NextFunction } from 'express';
 import db from '../sequelize/Sequelize';
 import CustomerRepository from '../sequelize/repositories/CustomerRepository';
+import CardRepository from '../sequelize/repositories/CardRepository';
 import Stripe from '../stripe/Stripe';
+import CommonController from './CommonController';
 
-class CustomerController {
+class CustomerController extends CommonController {
   /**
    * Create of find the current customer
    * @param req
    * @param res
    */
   static create(req: $Request, res: $Response, next: NextFunction): Function {
-    const body = req.body;
+    const user = req.user;
 
-    CustomerRepository
+    return CustomerRepository
       .findOneBy({
-        email: body.email,
+        qareId: user.id,
       })
       .then((customer) => {
         if (!customer) {
           return db.Customer.build({
-            email: body.email,
+            qareId: user.id,
+            email: user.email,
+            source: req.body.source,
           }).save();
         }
 
@@ -29,9 +33,9 @@ class CustomerController {
       })
       .then((customer) => {
         req.qare.model = customer;
-      });
-
-    return next();
+        return next();
+      })
+      .catch((error: Error) => next(error));
   }
 
   static setStripeId(req: $Request, res: $Response, next: NextFunction): Function {
@@ -39,12 +43,14 @@ class CustomerController {
 
     if (!customer.stripeId) {
       return Stripe()
-        .createCustomer(customer.email)
+        .createCustomer(customer)
         .then((result) => {
-          customer.stripeId = result.stripeId;
+          customer.stripeId = result.id;
 
-          return next();
-        });
+          return customer.save();
+        })
+        .then(() => (next()))
+        .catch((error: Error) => next(error));
     }
     return next();
   }
@@ -53,16 +59,17 @@ class CustomerController {
     const body = req.body;
     const customer = req.qare.model;
 
-    return db
-      .Card
-      .findOrCreate({
-        where: {
-          customer: req.qare.model,
-        },
+    return CardRepository
+      .findOneBy({
+        customer_id: customer.id,
       })
-      .spread((card, created) => {
+      .then((card) => {
+        if (card) {
+          throw new Error('A card is already set for the customer');
+        }
+        card = db.Card.build();
         card.city = body.city;
-        card.country = body.contry;
+        card.country = body.country;
         card.addressLine1 = body.addressLine1;
         card.addressLine2 = body.addressLine2;
         card.addressState = body.addressState;
@@ -72,6 +79,7 @@ class CustomerController {
         card.number = body.number;
         card.expMonth = body.expMonth;
         card.expYear = body.expYear;
+        card.customer_id = customer.id;
 
         return card.save();
       })
@@ -79,12 +87,13 @@ class CustomerController {
         Stripe()
           .createCard(customer, card)
           .then((result) => {
-            card.stripeId = result.stripeId;
+            card.stripeId = result.id;
 
             return card.save();
           })
       ))
-      .then(() => next());
+      .then((card) => res.json(card))
+      .catch((error: Error) => next(error));
   }
 }
 

@@ -3,8 +3,9 @@
 import { $Response, $Request, NextFunction } from 'express';
 import HttpError from '../errors/HttpError';
 import git from 'git-rev';
+import CommonController from './CommonController';
 
-class DefaultController {
+class DefaultController extends CommonController {
   /**
    * Default endpoint of the application.
    * @param req

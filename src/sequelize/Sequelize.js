@@ -38,6 +38,9 @@ Object.keys(db).forEach((modelName: string) => {
 sequelize
   .authenticate()
   .then(() => (sequelize.sync()))
+  .then(() => {
+    logger.info('Sequelize database connected.');
+  })
   .catch((err: Error) => {
     logger.error('Unable to connect to the database:', err);
   });

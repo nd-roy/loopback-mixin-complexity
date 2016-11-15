@@ -10,21 +10,21 @@ class Stripe {
     this.client = stripe(key);
   }
 
-  createCustomer(email: string, source: string) {
-    this.client.customers
+  createCustomer(customer: Customer) {
+    return this.client.customers
       .create({
-        description: `Customer for ${email}`,
-        source: 'source', // obtained with Stripe.js
-        email,
+        description: `Customer for ${customer.email}`,
+        source: customer.source,
+        email: customer.email,
       })
-      .then((customer: any): any => customer)
+      .then((result: any): any => result)
       .catch((err: Error) => {
         throw err;
       });
   }
 
   createSubscription(customer: Customer, plan: string) {
-    this.client.subscriptions
+    return this.client.subscriptions
       .create({
         customer: customer.stripeId,
         plan,
@@ -43,31 +43,33 @@ class Stripe {
    */
   createCard(customer: Customer, card: Card) {
     const data = {
-      address_city: card.city,
-      address_country: card.country,
-      address_line1: card.addressLine1,
-      address_line2: card.addressLine2,
-      address_state: card.addressState,
-      address_zip: card.addressZip,
-      country: card.country,
-      brand: card.brand,
-      exp_month: card.expMonth,
-      exp_year: card.expYear,
-      number: card.number,
-      object: 'card',
+      card: {
+        exp_month: card.expMonth,
+        exp_year: card.expYear,
+        number: card.number,
+        cvc: card.cvc,
+        address_city: card.city,
+        address_country: card.country,
+        address_line1: card.addressLine1,
+        address_line2: card.addressLine2,
+        address_state: card.addressState,
+        address_zip: card.addressZip,
+      },
     };
     let promise;
 
     if (card.stripeId) {
-      promise = this.client.cards
-        .create(
-          customer.stripeId,
+      promise = this.client
+        .customers
+        .updateCard(
+          customer.id,
           card.stripeId,
           data,
         );
     } else {
-      promise = this.client.cards
-        .create(customer.stripeId, data);
+      promise = this.client
+        .tokens
+        .create(data);
     }
     return promise
       .then((res: any): any => res)
@@ -78,5 +80,5 @@ class Stripe {
 }
 
 export default function () {
-  return new Stripe(config.stripeId);
+  return new Stripe(config.stripe.key);
 }

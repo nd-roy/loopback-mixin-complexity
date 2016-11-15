@@ -10,10 +10,11 @@ const DefaultRouter: Function = function defaultRouter(): Router {
   // perhaps expose some API metadata at the root
   router.post(
     '/',
+    CustomerController.isAuthenticated,
+    CustomerController.isPatient,
     CustomerController.create,
     CustomerController.setStripeId,
-    CustomerController.save,
-    CustomerController.billingInfo,
+    CustomerController.billingInfo
   );
 
   return router;

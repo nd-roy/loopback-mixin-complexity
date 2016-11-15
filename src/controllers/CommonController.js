@@ -13,7 +13,7 @@ class CommonController {
   /**
    * Check if the user is authenticated. Before accessing to a controller.
    */
-  static isAuthenticated: mixed = passport.authenticate('bearer', {
+  static isAuthenticated: mixed = passport.authenticate('kong', {
     session: false,
     failWithError: true,
   });

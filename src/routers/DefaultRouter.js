@@ -10,7 +10,10 @@ const DefaultRouter: Function = function defaultRouter(): Router {
   const router = Router();
 
   // perhaps expose some API metadata at the root
-  router.get('/', DefaultController.defaultEndpoint);
+  router.get('/',
+    DefaultController.isAuthenticated,
+    DefaultController.defaultEndpoint
+  );
 
   // Route that triggers a sample error
   router.get('/error', DefaultController.createError);

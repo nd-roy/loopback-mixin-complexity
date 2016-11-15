@@ -1,11 +1,11 @@
 import log4js from 'log4js';
 const logger = log4js.getLogger();
 import HttpStatus from 'http-status';
-import type { $Response, $Request } from 'express';
+import type { $Response, $Request, NextFunction } from 'express';
 
 // production error handler
 // no stacktraces leaked to user
-export default function (err: Error, req: $Request, res: $Response) {
+export default function (err: Error, req: $Request, res: $Response, next: NextFunction) {
   logger.error(err);
 
   const response: { statusCode: number, message: string, context: any } = {
