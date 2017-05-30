@@ -3,22 +3,16 @@
 import ModelDefinition from 'loopback-datasource-juggler/lib/model-definition';
 import debugModule from 'debug';
 import { check, create } from 'string-complexity';
+import ValidationError from './ValidationError';
 
 const debug = debugModule('loopback:mixin:complexity');
-
-function formatError(field: string) : string {
-  return `Field ${field}: Invalid format.`;
-}
 
 function validatePassword(options: {}, plain: string) : boolean {
   if (typeof plain === 'string' && check(plain, options)) {
     return true;
   }
 
-  const error : any = new Error(formatError('password'));
-  error.statusCode = 422;
-
-  throw error;
+  throw new ValidationError('password', 'format', 'Invalid Format.');
 }
 
 export default (Model: ModelDefinition, options: {}) => {
@@ -31,7 +25,7 @@ export default (Model: ModelDefinition, options: {}) => {
       } else {
         Model.validatesFormatOf(field, {
           with: create(fields[field]),
-          message: formatError(field),
+          message: 'Invalid format',
         });
       }
     });
